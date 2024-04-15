@@ -1,0 +1,11 @@
+Le Kerberoasting représente une stratégie d'attaque post-exploitation visant à décrypter le mot de passe d'un compte de service au sein d'Active Directory.
+
+Dans ce schéma d'attaque, un pirate informatique se faisant passer pour l'utilisateur d'un compte doté d'un nom de principal de service (SPN*) demande un ticket contenant un mot de passe chiffré, également appelé Kerberos. Par la suite, le pirate tente de décrypter le hachage du mot de passe en mode hors ligne, souvent en ayant recours à des méthodes de force brute.
+
+Une fois qu'il obtient les identifiants bruts du compte de service, le pirate se trouve en possession des informations utilisateur. Il peut alors les utiliser pour usurper l'identité du propriétaire du compte, se donnant ainsi l'apparence d'un utilisateur légitime. Cela lui permet d'accéder sans restriction à tous les systèmes, ressources ou réseaux accessibles par le compte compromis.
+
+Les attaques de type Kerberoasting sont particulièrement difficiles à détecter pour plusieurs raisons :
+
+De nombreux outils et solutions de cybersécurité conventionnels ne sont pas spécifiquement conçus pour surveiller ou analyser le comportement des utilisateurs autorisés.
+L'absence de logiciel malveillant dans ce type d'attaque rend inefficaces les défenses classiques telles que les antivirus.
+Étant donné qu'il s'agit d'une attaque "hors ligne", elle ne génère pas de trafic réseau anormal ni de transmission de paquets de données. Par conséquent, ces activités ne sont pas enregistrées dans les journaux et ne déclenchent pas d'alertes.
