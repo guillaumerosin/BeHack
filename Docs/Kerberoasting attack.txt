@@ -9,3 +9,27 @@ Les attaques de type Kerberoasting sont particulièrement difficiles à détecte
 De nombreux outils et solutions de cybersécurité conventionnels ne sont pas spécifiquement conçus pour surveiller ou analyser le comportement des utilisateurs autorisés.
 L'absence de logiciel malveillant dans ce type d'attaque rend inefficaces les défenses classiques telles que les antivirus.
 Étant donné qu'il s'agit d'une attaque "hors ligne", elle ne génère pas de trafic réseau anormal ni de transmission de paquets de données. Par conséquent, ces activités ne sont pas enregistrées dans les journaux et ne déclenchent pas d'alertes.
+
+
+Comment avons-nous pu exploiter une attaque du type kerberoasting ?
+
+Tout d’abord, il faut savoir que les hackers peuvent exploiter cette méthode principalement grâce à ses deux éléments : la combinaison de techniques de chiffrements faibles et de mots de passe faibles ou peu sécurisés. Voici comment se procède ce type d’attaque : 
+
+Un hacker ayant au préalable compromis le compte d’un utilisateur du domaine authentifie le compte et lance une nouvelle session.
+Le hacker, qui a ducoup toutes les apparences d’un utilisateur de domaine légitime, demande un ticket de service Kerberos auprès du service d’émission de tickets (TGS, Ticket Granting Service) à l’aide d’outils tels que Rubeus ou GetUserSPNs.py.
+Le hacker reçoit un ticket du centre de distribution de clé (KDC) Kerberos. Le ticket contient une version hachée du mot de passe du compte.
+Le hacker extrait le ticket TGS et le Kerberos de la mémoire pour les utiliser hors ligne.
+Ensuite, il essaie de décrypter la valeur SPN ou le hachage de l'identifiant du service afin d'obtenir le mot de passe du compte de service en clair, en utilisant des méthodes telles que l'attaque par force brute ou des outils comme Hashcat ou JohnTheRipper.
+Une fois qu'il a récupéré le mot de passe du compte de service, le hacker peut se connecter au compte de service et ainsi obtenir l'accès à tous les services, réseaux ou systèmes associés au compte compromis.
+À partir de là, il peut voler des données, augmenter ses privilèges ou installer des portes dérobées sur le réseau pour y accéder ultérieurement.
+
+
+Il est important de souligner plusieurs points :
+
+Les attaques de type Kerberoasting ne requièrent pas de compte administrateur de domaine ni de privilèges élevés. En effet, tout compte utilisateur peut demander des tickets de service au TGS et être utilisé dans ce type d'attaque.
+
+Pour mener une attaque de type Kerberoasting, un cyberattaquant a simplement besoin d'accéder à un compte utilisateur existant pour demander des tickets au KDC. Il peut obtenir cet accès par divers moyens, tels que l'ingénierie sociale (phishing), les attaques de malware ou l'achat d'identifiants utilisateur sur le Dark Web.
+
+Les noms de principal de service (SPN) peuvent être associés à des comptes utilisateurs de domaine ou à des comptes basés sur l'hôte. Les SPN basés sur l'hôte ne sont pas vulnérables aux attaques de type Kerberoasting car leurs mots de passe sont longs, complexes et actualisés régulièrement. En revanche, les mots de passe SPN des comptes utilisateurs sont souvent sujets aux mêmes vulnérabilités que les autres mots de passe créés manuellement, les rendant susceptibles d'être craqués rapidement avec des outils avancés.
+
+Les attaques de type Kerberoasting exploitent une faille architecturale qui permet à tout utilisateur authentifié de domaine de demander un ticket TGS pour n'importe quel service du réseau, sans vérification appropriée par le contrôleur de domaine. C'est le service lui-même qui applique les droits d'accès, créant ainsi une faille exploitable lors d'une attaque hors ligne.
